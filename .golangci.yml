@@ -1,12 +1,15 @@
 linters-settings:
+  gosec:
+    excludes:
+      - G204
   depguard:
     rules:
       main:
         allow:
           - $gostd
-          - github.com/nullzeiger/gopwd/internal/filehandling
-          - github.com/nullzeiger/gopwd/internal/pwdhandling
-          - github.com/nullzeiger/gopwd/internal/argparse
+          - github.com/nullzeiger/gowhatversion/internal/utility
+          - github.com/nullzeiger/gowhatversion/internal/version
+          - github.com/google/go-github/v59/github
   errcheck:
     check-type-assertions: true
   goconst:

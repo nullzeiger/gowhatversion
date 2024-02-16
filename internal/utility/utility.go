@@ -9,11 +9,11 @@ package utility
 import "os"
 
 // GetHome returns a string with the PATH of the home directory
-func GetHome() (string, error) {
+func GetHome() string {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return "", err
+		panic(err)
 	}
 
-	return homeDir, nil
+	return homeDir
 }
