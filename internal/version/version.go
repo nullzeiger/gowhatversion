@@ -45,7 +45,7 @@ func GetVersion(csvFile string) {
 
 	for _, item := range records[1:] {
 		if item[0] == "" {
-			panic(err)
+			fmt.Println("Not element in file")
 		}
 
 		cmd := exec.Command(item[0], version)
