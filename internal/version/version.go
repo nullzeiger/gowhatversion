@@ -26,10 +26,10 @@ func fetchLatestRelease(owner, repo string) (*github.RepositoryRelease, error) {
 }
 
 // GetVersion() display fetch latest release and local version
-func GetVersion(csvFile string) {
+func GetVersion(csvFile string) error {
 	file, err := os.Open(csvFile)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	defer file.Close()
@@ -38,7 +38,7 @@ func GetVersion(csvFile string) {
 
 	records, err := reader.ReadAll()
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	version := "--version"
@@ -52,12 +52,12 @@ func GetVersion(csvFile string) {
 
 		stdout, err := cmd.Output()
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		latest, err := fetchLatestRelease(item[1], item[2])
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		fmt.Printf("Local version of %s %slast version in GitHub repo is %s\nurl %s\n\n",
@@ -66,4 +66,6 @@ func GetVersion(csvFile string) {
 			latest.GetTagName(),
 			latest.GetHTMLURL())
 	}
+
+	return nil
 }

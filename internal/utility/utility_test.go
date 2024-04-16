@@ -3,17 +3,14 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Utility function package
+// Test utility package
 package utility
 
-import "os"
+import "testing"
 
-// GetHome returns a string with the PATH of the home directory
-func GetHome() (string, error) {
-	homeDir, err := os.UserHomeDir()
+func TestGetHome(t *testing.T) {
+	_, err := GetHome()
 	if err != nil {
-		return "", err
+		t.Errorf("GetHome() error %v", err)
 	}
-
-	return homeDir, nil
 }

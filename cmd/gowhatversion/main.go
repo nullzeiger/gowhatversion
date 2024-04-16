@@ -6,6 +6,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/nullzeiger/gowhatversion/internal/utility"
 	"github.com/nullzeiger/gowhatversion/internal/version"
 )
@@ -13,5 +15,13 @@ import (
 const filename = "/.apps.csv"
 
 func main() {
-	version.GetVersion(utility.GetHome() + filename)
+	home, err := utility.GetHome()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = version.GetVersion(home + filename)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
