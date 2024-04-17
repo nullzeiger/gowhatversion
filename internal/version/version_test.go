@@ -13,10 +13,12 @@ import (
 
 func TestGetVersion(t *testing.T) {
 	filename := "/test/test.csv"
+
 	path, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
+
 	err = GetVersion(path + "/../.." + filename)
 	if err != nil {
 		t.Errorf("GetVersion() error %v", err)
