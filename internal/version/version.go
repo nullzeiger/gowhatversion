@@ -13,7 +13,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/google/go-github/v59/github"
+	"github.com/google/go-github/v61/github"
 )
 
 // Fetch latest release in GitHub repo
@@ -23,6 +23,20 @@ func fetchLatestRelease(owner, repo string) (*github.RepositoryRelease, error) {
 	latest, _, err := client.Repositories.GetLatestRelease(ctx, owner, repo)
 
 	return latest, err
+}
+
+// Return local version
+func localRelease(item string) (string, error) {
+	flag := "--version"
+
+	cmd := exec.Command(item, flag)
+
+	stdout, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	return string(stdout), nil
 }
 
 // GetVersion() display fetch latest release and local version
@@ -41,16 +55,12 @@ func GetVersion(csvFile string) error {
 		return err
 	}
 
-	version := "--version"
-
-	for _, item := range records[1:] {
+	for _, item := range records {
 		if item[0] == "" {
 			fmt.Println("Not element in file")
 		}
 
-		cmd := exec.Command(item[0], version)
-
-		stdout, err := cmd.Output()
+		local, err := localRelease(item[0])
 		if err != nil {
 			return err
 		}
@@ -62,7 +72,7 @@ func GetVersion(csvFile string) error {
 
 		fmt.Printf("Local version of %s %slast version in GitHub repo is %s\nurl %s\n\n",
 			item[0],
-			string(stdout),
+			local,
 			latest.GetTagName(),
 			latest.GetHTMLURL())
 	}

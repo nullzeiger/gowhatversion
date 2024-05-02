@@ -9,7 +9,7 @@ linters-settings:
           - $gostd
           - github.com/nullzeiger/gowhatversion/internal/utility
           - github.com/nullzeiger/gowhatversion/internal/version
-          - github.com/google/go-github/v59/github
+          - github.com/google/go-github/v61/github
   errcheck:
     check-type-assertions: true
   goconst:
