@@ -29,6 +29,10 @@ func fetchLatestRelease(owner, repo string) (*github.RepositoryRelease, error) {
 func localRelease(item string) (string, error) {
 	flag := "--version"
 
+	if item == "zig" {
+		flag = "version"
+	}
+
 	cmd := exec.Command(item, flag)
 
 	stdout, err := cmd.Output()
