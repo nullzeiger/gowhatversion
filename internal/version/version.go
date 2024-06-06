@@ -33,14 +33,12 @@ func localRelease(item string) (string, error) {
 		flag = "version"
 	}
 
-	cmd := exec.Command(item, flag)
-
-	stdout, err := cmd.Output()
+	out, err := exec.Command(item, flag).Output()
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("%w %s does not have a --version flag for printing the version",err, item)
 	}
 
-	return string(stdout), nil
+	return string(out), nil
 }
 
 // GetVersion() display fetch latest release and local version
