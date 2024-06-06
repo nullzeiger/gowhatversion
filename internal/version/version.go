@@ -35,7 +35,7 @@ func localRelease(item string) (string, error) {
 
 	out, err := exec.Command(item, flag).Output()
 	if err != nil {
-		return "", fmt.Errorf("%w %s does not have a --version flag for printing the version",err, item)
+		return "", fmt.Errorf("%w %s does not have a --version flag for printing the version", err, item)
 	}
 
 	return string(out), nil
