@@ -7,22 +7,59 @@
 package version
 
 import (
-	"context"
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"os/exec"
-
-	"github.com/google/go-github/v61/github"
 )
 
-// Fetch latest release in GitHub repo
-func fetchLatestRelease(owner, repo string) (*github.RepositoryRelease, error) {
-	client := github.NewClient(nil)
-	ctx := context.Background()
-	latest, _, err := client.Repositories.GetLatestRelease(ctx, owner, repo)
+type Release struct {
+	TagName string `json:"tag_name"`
+	Url     string `json:"url"`
+}
 
-	return latest, err
+// Fetch latest release in GitHub repo
+func fetchLatestRelease(owner, repo string) ([]string, error) {
+	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases/latest", owner, repo)
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		fmt.Println("Error creating request:", err)
+		return nil, err
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Println("Error sending request:", err)
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Println("Error:", resp.Status)
+		return nil, err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading response body:", err)
+		return nil, err
+
+	}
+
+	var release Release
+	err = json.Unmarshal(body, &release)
+	if err != nil {
+		fmt.Println("Error unmarshalling JSON:", err)
+		return nil, err
+	}
+
+	a := []string{release.TagName, release.Url}
+
+	return a, nil
 }
 
 // Return local version
@@ -75,8 +112,8 @@ func GetVersion(csvFile string) error {
 		fmt.Printf("Local version of %s %slast version in GitHub repo is %s\nurl %s\n\n",
 			item[0],
 			local,
-			latest.GetTagName(),
-			latest.GetHTMLURL())
+			latest[0],
+			latest[1])
 	}
 
 	return nil
