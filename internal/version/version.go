@@ -10,7 +10,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
@@ -18,14 +18,14 @@ import (
 
 type Release struct {
 	TagName string `json:"tag_name"`
-	Url     string `json:"url"`
+	URL     string `json:"url"`
 }
 
 // Fetch latest release in GitHub repo
 func fetchLatestRelease(owner, repo string) ([]string, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases/latest", owner, repo)
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(http.MethodGet, url, http.NoBody)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
 		return nil, err
@@ -36,6 +36,7 @@ func fetchLatestRelease(owner, repo string) ([]string, error) {
 		fmt.Println("Error sending request:", err)
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
@@ -43,21 +44,21 @@ func fetchLatestRelease(owner, repo string) ([]string, error) {
 		return nil, err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("Error reading response body:", err)
 		return nil, err
-
 	}
 
 	var release Release
+
 	err = json.Unmarshal(body, &release)
 	if err != nil {
 		fmt.Println("Error unmarshalling JSON:", err)
 		return nil, err
 	}
 
-	a := []string{release.TagName, release.Url}
+	a := []string{release.TagName, release.URL}
 
 	return a, nil
 }
