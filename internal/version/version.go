@@ -22,7 +22,7 @@ type Release struct {
 }
 
 // Fetch latest release in GitHub repo
-func fetchLatestRelease(owner, repo string) ([]string, error) {
+func (r Release) fetchLatestRelease(owner, repo string) ([]string, error) {
 	url := fmt.Sprintf("https://api.github.com/repos/%s/%s/releases/latest", owner, repo)
 
 	req, err := http.NewRequest(http.MethodGet, url, http.NoBody)
@@ -50,17 +50,15 @@ func fetchLatestRelease(owner, repo string) ([]string, error) {
 		return nil, err
 	}
 
-	var release Release
-
-	err = json.Unmarshal(body, &release)
+	err = json.Unmarshal(body, &r)
 	if err != nil {
 		fmt.Println("Error unmarshalling JSON:", err)
 		return nil, err
 	}
 
-	a := []string{release.TagName, release.URL}
+	release := []string{r.TagName, r.URL}
 
-	return a, nil
+	return release, nil
 }
 
 // Return local version
@@ -105,7 +103,9 @@ func GetVersion(csvFile string) error {
 			return err
 		}
 
-		latest, err := fetchLatestRelease(item[1], item[2])
+		r := Release{"", ""}
+
+		latest, err := r.fetchLatestRelease(item[1], item[2])
 		if err != nil {
 			return err
 		}
