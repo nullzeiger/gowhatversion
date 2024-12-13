@@ -1,0 +1,70 @@
+linters-settings:
+  gosec:
+    excludes:
+      - G204
+  depguard:
+    rules:
+      main:
+        allow:
+          - $gostd
+          - github.com/nullzeiger/gowhatversion/internal/utility
+          - github.com/nullzeiger/gowhatversion/internal/version
+          - github.com/google/go-github/v61/github
+  errcheck:
+    check-type-assertions: true
+  goconst:
+    min-len: 2
+    min-occurrences: 3
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+  govet:
+    enable:
+      - fieldalignment
+      - shadow
+  nolintlint:
+    require-explanation: true
+    require-specific: true
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - copyloopvar
+    - exhaustive
+    - goconst
+    - gocritic
+    - gofmt
+    - goimports
+    - mnd
+    - gocyclo
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nolintlint
+    - nakedret
+    - prealloc
+    - predeclared
+    - revive
+    - staticcheck
+    - stylecheck
+    - thelper
+    - tparallel
+    - typecheck
+    - unconvert
+    - unparam
+    - whitespace
+    - wsl
+
+run:
+  issues-exit-code: 1
