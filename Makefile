@@ -1,7 +1,11 @@
-# Copyright 2024 Ivan Guerreschi <ivan.guerreschi.dev@gmail.com>.
+# Copyright 2025 Ivan Guerreschi <ivan.guerreschi.dev@gmail.com>.
 # All rights reserved.
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
+
+.PHONY: build test lint vet fmt clean run
+
+all: build test
 
 lint:
 	golangci-lint run --config .golangci.yml
@@ -19,7 +23,7 @@ test:
 	go test -v ./...
 
 build:
-	go build -o build/gowhatversion cmd/gowhatversion/main.go
+	go build -o build/gowhatversion main.go
 
 clean:
-	rm -rf build      
+	rm -rf build
