@@ -65,10 +65,6 @@ func (r Release) fetchLatestRelease(owner, repo string) ([]string, error) {
 func localRelease(item string) (string, error) {
 	flag := "--version"
 
-	if item == "zig" {
-		flag = "version"
-	}
-
 	out, err := exec.Command(item, flag).Output()
 	if err != nil {
 		return "", fmt.Errorf("%w %s does not have a --version flag for printing the version", err, item)
